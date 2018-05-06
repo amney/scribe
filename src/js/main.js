@@ -3,7 +3,15 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import RestClient from './tetration'
 
-
+// A Cell is injected into the Tetration UI for each existing table cell 
+// that holds an annotation. Cell places an Edit button next to the current value.
+// Clicking the edit button will replace the text with a user editable input 
+// pre-populated with the current value. 
+//
+// On submission an API call will be made to update the annotation in the backend
+// On error the UI will revert back to the original value and display a warning
+// On success a timer icon will be displayed next to the updated value
+// On reaching a 5 minute timeout, a success icon will replace the timer icon
 class Cell extends React.Component {
   constructor() {
     super()
