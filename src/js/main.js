@@ -19,6 +19,27 @@ class Cell extends React.Component {
     this.successTimeout = null
   }
 
+  handleResponse(error, response) {
+    if (error) {
+      this.setState({ editing: false, error: true, pending: false, errorValue: "a connection error occured" })
+      return
+    }
+    switch (response.statusCode) {
+      case 200:
+        this.setState({ editing: false, error: false, pending: true })
+        this.successTimeout = setTimeout(() => this.setState({ pending: false, committed: true }), 300000) // declare success in 5 mins - TODO: something smarter
+        break
+      case 401:
+        this.setState({ editing: false, error: true, pending: false, errorValue: `Your API credentials (or lack thereof) were not accepted for authentication` })
+        break
+      case 403:
+        this.setState({ editing: false, error: true, pending: false, errorValue: `Your API credentials are correct, but you are not authorized` })
+        break
+      default:
+        this.setState({ editing: false, error: true, pending: false, errorValue: response.body })
+    }
+  }
+
   save(e) {
     e.preventDefault()
     let { address, vrf, header } = this.props
@@ -31,35 +52,16 @@ class Cell extends React.Component {
       const credentials = result[domain] || { key: "", secret: "" }
       const rc = new RestClient("https://" + domain, credentials.key, credentials.secret)
 
+      // There may be some pending updates that are < 5 mins old - 
+      // we don't want to see their success icon now when this timeout triggers
+      // as it will be stale
       clearTimeout(this.successTimeout)
-      this.setState({ committed: false })
-      rc.post(
-        endpoint,
-        (error, response) => {
-          if (error) {
-            this.setState({ editing: false, error: true, pending: false, errorValue: "a connection error occured" })
-            console.log(error)
-          }
-          switch (response.statusCode) {
-            case 200:
-              this.setState({ editing: false, error: false, pending: true, pendingValue: value })
-              this.successTimeout = setTimeout(() => this.setState({ pending: false, committed: true }), 300000)
-              break
-            case 401:
-              this.setState({ editing: false, error: true, pending: false, errorValue: `API credentials failure - ${response.body}` })
-              break
-            case 403:
-              this.setState({ editing: false, error: true, pending: false, errorValue: `API credentials failure - ${response.body}` })
-              break
-            default:
-              this.setState({ editing: false, error: true, pending: false, errorValue: response.body })
-          }
-        }, {
-          json_body: body
-        }
-      )
+
+      this.setState({ committed: false, pendingValue: value })
+      rc.post(endpoint, this.handleResponse.bind(this), { json_body: body })
     })
   }
+
   render() {
     let annotation = this.props.annotation.trim()
 
@@ -73,7 +75,7 @@ class Cell extends React.Component {
       </div> :
       <div>
         {this.state.committed && <span title="Saved">✅ {this.state.pendingValue}</span>}
-        {this.state.error && <span title={"Could not save because: " + this.state.errorValue.toLowerCase()}>🚨 {annotation}</span>}
+        {this.state.error && <span title={"Could not save because " + this.state.errorValue.toLowerCase()}>🚨 {annotation}</span>}
         {this.state.pending && <span title="Saved - pending back end confirmation..">⏳ {this.state.pendingValue}</span>}
         {!this.state.pending && !this.state.error && !this.state.committed && annotation}
         <button className="btn btn-default" onClick={() => this.setState({ editing: true })} style={{ float: 'right' }}>Edit</button>
@@ -81,7 +83,8 @@ class Cell extends React.Component {
   }
 }
 
-// Message Listener function
+// This Message Listener function will receive an event from the popup window when the 
+// user wishes to inject the "Edit" buttons into the page
 chrome.runtime.onMessage.addListener((request, sender, response) => {
   // If message is injectApp
   if (request.injectApp) {
@@ -94,6 +97,7 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
 })
 
 function injectApp() {
+  // Only celect cells that have not previously had the extension injected (e.g. to handle when edit is clicked twice)
   var cells = document.querySelectorAll(":not([data-scribe=injected])[title*=✻]")
   cells.forEach((cell) => {
     let row = cell.parentElement.parentElement.parentElement
