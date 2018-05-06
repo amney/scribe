@@ -1,0 +1,55 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <title>Tetration Scribe</title>
+    <style type="text/css">
+      body {
+        margin: 10px;
+        white-space: nowrap;
+      }
+
+      #container {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .credentials {
+        margin-bottom: 15px;
+      }
+
+      .edit {
+        border: 1px solid #000;
+        padding: 5px 15px;
+        cursor: pointer;
+        display: inline-block;
+        width: 100%;
+      }
+
+      .creds {
+        border: 1px solid #000;
+        padding: 5px 15px;
+        display: inline-block;
+        margin-right: 5px;
+      }
+
+      .save {
+        border: 1px solid #000;
+        padding: 5px 15px;
+        cursor: pointer;
+        display: inline-block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+    </div>
+  </body>
+  <script src="build/popup.js"></script>
+</html>

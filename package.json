@@ -1,0 +1,20 @@
+{
+  "name": "scribe",
+  "version": "0.1.0",
+  "description": "In place annotation editing extension for Tetration. Requires software version 2.3+",
+  "main": "src/js/main.js",
+  "scripts": {
+    "build": "parcel build src/js/main.js -d src/build/ && parcel build src/js/popup.js -d src/build/",
+    "watch": "parcel watch src/js/main.js -d src/build/",
+    "popup": "parcel watch src/js/popup.js -d src/build/"
+  },
+  "author": "Tim Garner",
+  "dependencies": {
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "parcel-bundler": "^1.6.2",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "request": "^2.85.0"
+  }
+}
