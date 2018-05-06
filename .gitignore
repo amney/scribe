@@ -4,3 +4,4 @@ node_modules/
 src/build/
 .DS_Store
 .vscode
+scribe.zip
