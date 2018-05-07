@@ -4,13 +4,13 @@
   "description": "In place annotation editing extension for Tetration. Requires software version 2.3+",
   "version": "1.0.1",
   "browser_action": {
-    "default_icon": "tetration48.png",
+    "default_icon": "src/img/tetration48.png",
     "default_popup": "src/popup.html"
   },
   "icons": {
-    "16": "tetration16.png",
-    "48": "tetration48.png",
-    "128": "tetration128.png"
+    "16": "src/img/tetration16.png",
+    "48": "src/img/tetration48.png",
+    "128": "src/img/tetration128.png"
   },
   "permissions": [
     "activeTab",
