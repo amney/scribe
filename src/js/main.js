@@ -43,8 +43,11 @@ class Cell extends React.Component {
       case 403:
         this.setState({ editing: false, error: true, pending: false, errorValue: `Your API credentials are correct, but you are not authorized` })
         break
+      case 404:
+        this.setState({ editing: false, error: true, pending: false, errorValue: `You are running an earlier unsupported TetrationOS. Please upgrade to a minimum of 2.3.1.41` })
+        break
       default:
-        this.setState({ editing: false, error: true, pending: false, errorValue: response.body })
+        this.setState({ editing: false, error: true, pending: false, errorValue: response.body || "an unknown error occurred" })
     }
   }
 
