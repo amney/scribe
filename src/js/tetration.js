@@ -1,4 +1,4 @@
-/* Tetration Analytics Rest API Python client */
+/* Tetration Analytics Rest API Javascript client */
 import request from 'request'
 import crypto from 'crypto'
 
