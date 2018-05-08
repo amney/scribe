@@ -13,7 +13,10 @@ class Options extends React.Component {
   }
 
   componentDidMount() {
-    chrome.tabs.getSelected(null, (tab) => {
+    chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    }, (tab) => {
       var url = new URL(tab.url)
       var domain = url.hostname
       console.log(domain)
@@ -69,7 +72,7 @@ class Options extends React.Component {
     let { domain, credentials } = this.state
     credentials.secret = secret
     console.log("saving secret (obscured)")
-    
+
     this.setState({ credentials })
     chrome.storage.local.set({ [domain]: { key: credentials.key, secret: credentials.secret } })
   }
