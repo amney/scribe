@@ -16,14 +16,15 @@ class Options extends React.Component {
     chrome.tabs.query({
       active: true,
       currentWindow: true,
-    }, (tab) => {
-      var url = new URL(tab.url)
-      var domain = url.hostname
+    }, (tabs) => {
+      let tab = tabs[0]
+      let url = new URL(tab.url)
+      let domain = url.hostname
       console.log(domain)
 
       chrome.storage.local.get([domain], (result) => {
         console.log("Found existing credentials:", result)
-        var credentials = result[domain] || { key: "", secret: "" }
+        let credentials = result[domain] || { key: "", secret: "" }
         console.log(credentials)
         this.setState({ domain, credentials })
       })
