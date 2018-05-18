@@ -109,9 +109,13 @@ chrome.runtime.onMessage.addListener((request, sender, response) => {
 
 function injectApp() {
   // Only celect cells that have not previously had the extension injected (e.g. to handle when edit is clicked twice)
+  let vrf = document.querySelector("#inventory-root-scope > span.scope-name") || 
+            document.querySelector("#viewFilterDetailsOwnershipScope span.scope-name") || 
+            document.querySelector("#filter-details .vitals-table .ng-scope .scope-name")
+  vrf = vrf.textContent.trim()
+  vrf = vrf.split(":")[0]
   var cells = document.querySelectorAll(":not([data-scribe=injected])[title*=✻]")
   cells.forEach((cell) => {
-    let vrf = document.querySelector("#inventory-root-scope > span.scope-name").textContent.trim()
     let row = cell.parentElement.parentElement.parentElement
     let address = row.querySelector("[title^=Address]").textContent.trim()
     let header = cell.title.match(/✻ (.*): /)[1]

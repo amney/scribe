@@ -1,6 +1,6 @@
 {
   "name": "scribe",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "In place annotation editing extension for Tetration. Requires software version 2.3+",
   "main": "src/js/main.js",
   "scripts": {
