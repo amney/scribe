@@ -111,8 +111,8 @@ function injectApp() {
   // Only celect cells that have not previously had the extension injected (e.g. to handle when edit is clicked twice)
   var cells = document.querySelectorAll(":not([data-scribe=injected])[title*=✻]")
   cells.forEach((cell) => {
+    let vrf = document.querySelector("#inventory-root-scope > span.scope-name").textContent.trim()
     let row = cell.parentElement.parentElement.parentElement
-    let vrf = row.querySelector("[title^=VRF]").textContent.trim()
     let address = row.querySelector("[title^=Address]").textContent.trim()
     let header = cell.title.match(/✻ (.*): /)[1]
     cell.setAttribute("data-scribe", "injected")
